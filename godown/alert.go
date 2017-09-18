@@ -7,7 +7,6 @@ import (
 	"net/smtp"
 )
 
-
 //LogPrintln Outputs to the console
 func LogPrintln(target string, err error) {
 	log.Printf("%v error: %v\n", target, err)
@@ -15,6 +14,12 @@ func LogPrintln(target string, err error) {
 
 //Gmail sends an alert email using Gmail
 func Gmail(target string, reason error, from, to, pass string) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("Recovered in Gmail", r)
+		}
+	}()
+
 	body := fmt.Sprintf(
 		"To:%v\r\n"+
 			"Subject: Godown alert! [%v]\r\n\r\n"+
